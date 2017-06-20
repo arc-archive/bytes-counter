@@ -1,0 +1,143 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../iron-test-helpers/test-helpers.js"></script>
+    <script src="../../iron-test-helpers/mock-interactions.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../bytes-counter.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+        <bytes-counter></bytes-counter>
+      </template>
+    </test-fixture>
+
+    <script>
+    /* global fixture, assert */
+    /* jshint esnext: true */
+    suite('calculateBytesString', function() {
+      var element;
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('value is undefined', function() {
+        assert.isUndefined(element.value);
+      });
+
+      test('bytes is undefined', function() {
+        assert.isUndefined(element.bytes);
+      });
+    });
+
+    function performMapTest(element, map, fnCall) {
+      var iterator = map.entries();
+      while (true) {
+        let entry = iterator.next();
+        if (entry.done) {
+          break;
+        }
+        var item = entry.value;
+        let size = element[fnCall](item[0]);
+        assert.equal(size, item[1], 'Size of "' + item[0] + '" equals ' + item[1]);
+      }
+    }
+
+    // function skipWithoutFormDataUnless() {
+    //   return (('Request' in window) && typeof Request.prototype.arrayBuffer !== 'undefined');
+    // }
+
+    //TestHelpers.skipUnless(skipWithoutFormDataUnless, function {})
+
+    function getBuffer(text) {
+      var value;
+      if ('TextEncoder' in window) {
+        var encoder = new TextEncoder();
+        var encoded = encoder.encode(text);
+        value = encoded.buffer;
+      } else {
+        var str = text;
+        value = new ArrayBuffer(str.length);
+        var _bufferView = new Uint8Array(value);
+        for (var i = 0; i < str.length; i++) {
+          _bufferView[i] = str.charCodeAt(i);
+        }
+      }
+      return value;
+    }
+
+    suite('stringBytes()', function() {
+      var element;
+      var model = new Map([
+        ['a', 1],
+        ['ł', 2]
+      ]);
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('computes size of input', function() {
+        performMapTest(element, model, 'stringBytes');
+      });
+    });
+
+    suite('blobBytes()', function() {
+      var element;
+      var model = new Map([
+        [new Blob(['a']), 1],
+        [new Blob(['ą']), 2]
+      ]);
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('computes size of input', function() {
+        performMapTest(element, model, 'blobBytes');
+      });
+    });
+
+    suite('bufferBytes()', function() {
+      var element;
+      var model = new Map([
+        [getBuffer('a'), 1],
+        [getBuffer('ą'), 2]
+      ]);
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('computes size of input', function() {
+        performMapTest(element, model, 'bufferBytes');
+      });
+    });
+
+    /*test('computes size of input', function() {
+      var promises = model.map(item => {
+        return element.stringBytes(item.name)
+        .then((size) => {
+          assert.equal(size, item.size);
+        });
+      });
+      return Promise.all(promises);
+    });*/
+    </script>
+
+  </body>
+</html>
