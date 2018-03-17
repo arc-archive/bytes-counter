@@ -15,10 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
-    <script src="../../iron-test-helpers/test-helpers.js"></script>
-    <script src="../../iron-test-helpers/mock-interactions.js"></script>
-
-    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../../fetch-polyfill/fetch-polyfill.html">
     <link rel="import" href="../bytes-counter.html">
   </head>
   <body>
@@ -29,33 +26,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </test-fixture>
 
+    <test-fixture id="stringPromise">
+      <template>
+        <bytes-counter value="test"></bytes-counter>
+      </template>
+    </test-fixture>
+    <test-fixture id="numberPromise">
+      <template>
+        <bytes-counter value="2"></bytes-counter>
+      </template>
+    </test-fixture>
+
     <script>
     /* global fixture, assert */
     /* jshint esnext: true */
-    suite('calculateBytesString', function() {
+    suite('calculateBytesString', () => {
       var element;
-      setup(function() {
+      setup(() => {
         element = fixture('basic');
       });
 
-      test('value is undefined', function() {
+      test('value is undefined', () => {
         assert.isUndefined(element.value);
       });
 
-      test('bytes is undefined', function() {
+      test('bytes is undefined', () => {
         assert.isUndefined(element.bytes);
       });
     });
 
     function performMapTest(element, map, fnCall) {
-      var iterator = map.entries();
+      const iterator = map.entries();
       while (true) {
-        let entry = iterator.next();
+        const entry = iterator.next();
         if (entry.done) {
           break;
         }
-        var item = entry.value;
-        let size = element[fnCall](item[0]);
+        const item = entry.value;
+        const size = element[fnCall](item[0]);
         assert.equal(size, item[1], 'Size of "' + item[0] + '" equals ' + item[1]);
       }
     }
@@ -67,15 +75,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     //TestHelpers.skipUnless(skipWithoutFormDataUnless, function {})
 
     function getBuffer(text) {
-      var value;
+      let value;
       if ('TextEncoder' in window) {
-        var encoder = new TextEncoder();
-        var encoded = encoder.encode(text);
+        const encoder = new TextEncoder();
+        const encoded = encoder.encode(text);
         value = encoded.buffer;
       } else {
-        var str = text;
+        const str = text;
         value = new ArrayBuffer(str.length);
-        var _bufferView = new Uint8Array(value);
+        const _bufferView = new Uint8Array(value);
         for (var i = 0; i < str.length; i++) {
           _bufferView[i] = str.charCodeAt(i);
         }
@@ -83,60 +91,67 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return value;
     }
 
-    suite('stringBytes()', function() {
-      var element;
-      var model = new Map([
+    suite('stringBytes()', () => {
+      let element;
+      const model = new Map([
         ['a', 1],
         ['ł', 2]
       ]);
-      setup(function() {
+      setup(() => {
         element = fixture('basic');
       });
 
-      test('computes size of input', function() {
+      test('computes size of input', () => {
         performMapTest(element, model, 'stringBytes');
       });
     });
 
-    suite('blobBytes()', function() {
-      var element;
-      var model = new Map([
+    suite('blobBytes()', () => {
+      let element;
+      const model = new Map([
         [new Blob(['a']), 1],
         [new Blob(['ą']), 2]
       ]);
-      setup(function() {
+      setup(() => {
         element = fixture('basic');
       });
 
-      test('computes size of input', function() {
+      test('computes size of input', () => {
         performMapTest(element, model, 'blobBytes');
       });
     });
 
-    suite('bufferBytes()', function() {
-      var element;
-      var model = new Map([
+    suite('bufferBytes()', () => {
+      let element;
+      const model = new Map([
         [getBuffer('a'), 1],
         [getBuffer('ą'), 2]
       ]);
-      setup(function() {
+      setup(() => {
         element = fixture('basic');
       });
 
-      test('computes size of input', function() {
+      test('computes size of input', () => {
         performMapTest(element, model, 'bufferBytes');
       });
     });
 
-    /*test('computes size of input', function() {
-      var promises = model.map(item => {
-        return element.stringBytes(item.name)
-        .then((size) => {
-          assert.equal(size, item.size);
+    suite('Auto compute', () => {
+      test('Computes string value', (done) => {
+        const element = fixture('stringPromise');
+        element.addEventListener('bytes-changed', (e) => {
+          assert.equal(e.detail.value, '4');
+          done();
         });
       });
-      return Promise.all(promises);
-    });*/
+      test('Computes number value', (done) => {
+        const element = fixture('numberPromise');
+        element.addEventListener('bytes-changed', (e) => {
+          assert.equal(e.detail.value, '1');
+          done();
+        });
+      });
+    });
     </script>
 
   </body>

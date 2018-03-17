@@ -11,9 +11,7 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 -->
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../arc-polyfills/arc-polyfills.html">
-<link rel="import" href="../fetch-polyfill/fetch-polyfill.html">
+<link rel="import" href="../polymer/polymer-element.html">
 <!--
 An element that computes number of bytes in `String`, `ArrayBuffer`, `Blob`
 (and therefore `File`) and in supported browsers `FormData`.
@@ -34,32 +32,42 @@ In the example above the `bytes` variable contains size of the input.
 Note that computations are synchronous and there is a delay between setting the
 `value` property (or calling `calculate()` function) and getting a result.
 
-@group Logic Elements
-@element bytes-counter
+## New in version 2
+
+- It does not include polyfills. Include polyfills library if you targeting
+older browsers. Polyfill required for fetch API to support FormData.
+
+@customElement
+@polymer
 @demo demo/index.html
+@memberof UiElements
 -->
 <script>
-Polymer({
-  is: 'bytes-counter',
-  properties: {
-    /**
-     * A value to be evaluated.
-     * It can be text, blob (and therefore File), ArrayBuffer or FormData
-     */
-    value: String,
-    /**
-     * Calculated number of bytes from the `value`
-     */
-    bytes: {
-      type: Number,
-      notify: true,
-      readOnly: true
-    }
-  },
+class BytesCounter extends Polymer.Element {
+  static get is() {
+    return 'bytes-counter';
+  }
+  static get properties() {
+    return {
+      /**
+       * A value to be evaluated.
+       * It can be text, blob (and therefore File), ArrayBuffer or FormData
+       */
+      value: {
+        type: String,
+        observer: 'calculate'
+      },
+      /**
+       * Calculated number of bytes from the `value`
+       */
+      bytes: {
+        type: Number,
+        notify: true,
+        readOnly: true
+      }
+    };
+  }
 
-  observers: [
-    'calculate(value)'
-  ],
   /**
    * Calculates number of bytes in the `value`.
    *
@@ -75,8 +83,16 @@ Polymer({
    * the `value` is not one of the supported types then the promise will
    * resolve to `undefined`;
    */
-  calculate: function(value) {
-    var size;
+  calculate(value) {
+    if (value === undefined) {
+      this._setBytes(0);
+      return Promise.resolve(0);
+    }
+    if (value === null) {
+      this._setBytes(0);
+      return Promise.resolve(0);
+    }
+    let size;
     if (typeof value === 'string') {
       size = this.stringBytes(value);
     } else if (value instanceof Blob) {
@@ -86,30 +102,36 @@ Polymer({
     } else if (value instanceof FormData ||
       (URLSearchParams in window && (value instanceof URLSearchParams))) {
       size = this._bodyToArrayBuffer(value)
-      .then(function(buffer) {
-        if (!buffer) {
-          return Promise.reject(new Error('Your browser do not support Fetch API.'));
-        }
-        return this.bufferBytes(buffer);
-      }.bind(this));
+      .then((buffer) => this._handleBuffer(buffer));
+    } else {
+      size = this.stringBytes(String(value));
     }
-
     if (!(size instanceof Promise)) {
       size = Promise.resolve(size);
     }
     return size
-    .then(function(size) {
+    .then((size) => {
       this._setBytes(size);
       return size;
-    }.bind(this))
-    .catch(function(cause) {
+    })
+    .catch((cause) => {
       this.fire('error', {
-        message: cause && cause.message ? cause.message :
-          'Your browser do not support this API.'
+        message: cause && cause.message ? cause.message : 'Your browser do not support this API.'
       });
-    }.bind(this));
-  },
-
+    });
+  }
+  /**
+   * Handles buffer size calculation.
+   *
+   * @param {ArrayBuffer} buffer Buffer created from the body.
+   * @return {Promise} Promise resolved to number of bytes in the buffer.
+   */
+  _handleBuffer(buffer) {
+    if (!buffer) {
+      return Promise.reject(new Error('Your browser do not support Fetch API.'));
+    }
+    return Promise.resolve(this.bufferBytes(buffer));
+  }
   /**
    * Calculates number of bytes in string.
    *
@@ -118,10 +140,10 @@ Polymer({
    * @param {Strgin} str A value to evaluate
    * @return {Number} Number of bytes in the string.
    */
-  stringBytes: function(str) {
-    var s = str.length;
-    for (var i = str.length - 1; i >= 0; i--) {
-      var code = str.charCodeAt(i);
+  stringBytes(str) {
+    let s = str.length;
+    for (let i = str.length - 1; i >= 0; i--) {
+      const code = str.charCodeAt(i);
       if (code > 0x7f && code <= 0x7ff) {
         s++;
       } else if (code > 0x7ff && code <= 0xffff) {
@@ -132,16 +154,16 @@ Polymer({
       }
     }
     return s;
-  },
+  }
   /**
    * Calculates number of bytes in Blob (and therefore in File).
    *
    * @param {Blob|File} blob A value to evaluate
    * @return {Number} Number of bytes in the blob.
    */
-  blobBytes: function(blob) {
+  blobBytes(blob) {
     return blob.size;
-  },
+  }
   /**
    * Calculates number of bytes in ArrayBuffer.
    *
@@ -152,9 +174,9 @@ Polymer({
    * @param {ArrayBuffer} buffer A value to evaluate
    * @return {Number} Number of bytes in the buffer.
    */
-  bufferBytes: function(buffer) {
+  bufferBytes(buffer) {
     return buffer.byteLength;
-  },
+  }
   /**
    * Transfer any object that is acceptable as a bidy parameter in the Request
    * object to ArrayBuffer.
@@ -164,8 +186,8 @@ Polymer({
    * @return {Promise} Resolved promise with the ArrayBuffer. It will reject
    * if the browser doesn't support this method.
    */
-  _bodyToArrayBuffer: function(body) {
-    var request;
+  _bodyToArrayBuffer(body) {
+    let request;
     try {
       request = new Request('/', {
         method: 'POST',
@@ -178,6 +200,7 @@ Polymer({
       return Promise.reject(new Error('Your browser do not support this method.'));
     }
     return request.arrayBuffer();
-  },
-});
+  }
+}
+window.customElements.define(BytesCounter.is, BytesCounter);
 </script>
