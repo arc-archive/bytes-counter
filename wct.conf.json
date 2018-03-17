@@ -8,17 +8,29 @@
     "sauce": {
       "disabled": true,
       "browsers": [{
-        "browserName": "microsoftedge",
+        "browserName": "firefox",
         "platform": "Windows 10",
-        "version": ""
+        "version": "latest-4"
       }, {
         "browserName": "firefox",
         "platform": "Windows 10",
-        "version": "latest-2"
+        "version": "latest"
       }, {
         "browserName": "chrome",
         "platform": "Windows 10",
-        "version": "latest-2"
+        "version": "latest-4"
+      }, {
+        "browserName": "chrome",
+        "platform": "Windows 10",
+        "version": "latest"
+      }, {
+        "browserName": "safari",
+        "platform": "macOS 10.12",
+        "version": "10.1"
+      }, {
+        "browserName": "safari",
+        "platform": "macOS 10.13",
+        "version": "11.0"
       }]
     }
   }
