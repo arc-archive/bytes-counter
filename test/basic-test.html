@@ -64,7 +64,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         const item = entry.value;
         const size = element[fnCall](item[0]);
-        assert.equal(size, item[1], 'Size of "' + item[0] + '" equals ' + item[1]);
+        assert.equal(size, item[1][0], 'Size of "' + item[0] + '" equals ' + item[1][0] + ': ' + item[1][1]);
       }
     }
 
@@ -82,10 +82,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         value = encoded.buffer;
       } else {
         const str = text;
-        value = new ArrayBuffer(str.length);
-        const _bufferView = new Uint8Array(value);
-        for (var i = 0; i < str.length; i++) {
-          _bufferView[i] = str.charCodeAt(i);
+        value = new ArrayBuffer(str.length*2); // 2 bytes for each char
+        const bufView = new Uint16Array(value);
+        for (let i = 0, strLen = str.length; i < strLen; i++) {
+          bufView[i] = str.charCodeAt(i);
         }
       }
       return value;
@@ -94,8 +94,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('stringBytes()', () => {
       let element;
       const model = new Map([
-        ['a', 1],
-        ['ł', 2]
+        ['a', [1, 'a has size 1']],
+        ['ł', [2, 'ł has size 2']],
+        ['1', [1, '1 has size 1']]
       ]);
       setup(() => {
         element = fixture('basic');
@@ -109,8 +110,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('blobBytes()', () => {
       let element;
       const model = new Map([
-        [new Blob(['a']), 1],
-        [new Blob(['ą']), 2]
+        [new Blob(['a']), [1, 'a has size 1']],
+        [new Blob(['ą']), [2, 'ą has size 2']],
+        [new Blob(['1']), [1, '1 has size 1']]
       ]);
       setup(() => {
         element = fixture('basic');
@@ -124,8 +126,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     suite('bufferBytes()', () => {
       let element;
       const model = new Map([
-        [getBuffer('a'), 1],
-        [getBuffer('ą'), 2]
+        [getBuffer('a'), [1, 'a has size 1']],
+        [getBuffer('ą'), [2, 'ą has size 2']],
+        [getBuffer('1'), [1, '1 has size 1']]
       ]);
       setup(() => {
         element = fixture('basic');
