@@ -84,11 +84,7 @@ class BytesCounter extends Polymer.Element {
    * resolve to `undefined`;
    */
   calculate(value) {
-    if (value === undefined) {
-      this._setBytes(0);
-      return Promise.resolve(0);
-    }
-    if (value === null) {
+    if (value === undefined || value === null) {
       this._setBytes(0);
       return Promise.resolve(0);
     }
@@ -115,9 +111,12 @@ class BytesCounter extends Polymer.Element {
       return size;
     })
     .catch((cause) => {
-      this.fire('error', {
-        message: cause && cause.message ? cause.message : 'Your browser do not support this API.'
-      });
+      console.warn(cause);
+      this.dispatchEvent(new CustomEvent('error', {
+        detail: {
+          message: cause && cause.message ? cause.message : 'Your browser do not support this API.'
+        }
+      }));
     });
   }
   /**
@@ -150,7 +149,7 @@ class BytesCounter extends Polymer.Element {
         s += 2;
       }
       if (code >= 0xDC00 && code <= 0xDFFF) {
-        i--; //trail surrogate
+        i--; // trail surrogate
       }
     }
     return s;
