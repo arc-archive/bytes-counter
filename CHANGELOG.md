@@ -1,4 +1,10 @@
 <a name="2.0.1"></a>
+## [2.0.1](https://github.com/advanced-rest-client/bytes-counter/compare/1.0.0...2.0.1) (2019-01-11)
+
+
+
+
+<a name="2.0.1"></a>
 ## 2.0.1 (2018-03-17)
 
 
