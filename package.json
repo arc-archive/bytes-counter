@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git://github.com/advanced-rest-client/bytes-counter.git"
   },
-  "name": "@arc-components/bytes-counter",
+  "name": "@advanced-rest-client/bytes-counter",
   "version": "3.0.0-preview.1",
   "license": "Apache-2.0",
   "authors": [
@@ -18,8 +18,7 @@
     "The Advanced REST client authors <arc@mulesoft.com>"
   ],
   "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.6.0",
-    "bower": "^1.8.0",
+    "@polymer/gen-typescript-declarations": "^1.6.1",
     "@polymer/iron-demo-helpers": "^3.0.0",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "@polymer/iron-component-page": "^4.0.0",

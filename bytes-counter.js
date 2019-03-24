@@ -11,44 +11,36 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 */
+import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
 /**
-An element that computes number of bytes in `String`, `ArrayBuffer`, `Blob`
-(and therefore `File`) and in supported browsers `FormData`.
+ An element that computes number of bytes in `String`, `ArrayBuffer`, `Blob`
+ (and therefore `File`) and in supported browsers `FormData`.
 
-Note that Safari is excluded from FormData tests because there's some bug in
-WebKit iplementation of the Request object and it doesn't read FormData
-properly. Chrome had similar bug but they fixed it already. See demo page
-to check if your browser support FormData.
+ Note that Safari is excluded from FormData tests because there's some bug in
+ WebKit iplementation of the Request object and it doesn't read FormData
+ properly. Chrome had similar bug but they fixed it already. See demo page
+ to check if your browser support FormData.
 
-### Example
-```
-<textarea value="{{value::input}}"></textarea>
-<bytes-counter value="[[value]]" bytes="{{bytes}}"></bytes-counter>
-```
+ ### Example
+ ```
+ <textarea value="{{value::input}}"></textarea>
+ <bytes-counter value="[[value]]" bytes="{{bytes}}"></bytes-counter>
+ ```
 
-In the example above the `bytes` variable contains size of the input.
+ In the example above the `bytes` variable contains size of the input.
 
-Note that computations are synchronous and there is a delay between setting the
-`value` property (or calling `calculate()` function) and getting a result.
+ Note that computations are synchronous and there is a delay between setting the
+ `value` property (or calling `calculate()` function) and getting a result.
 
-## New in version 2
+ Note: It does not include polyfills. Include polyfills library if you targeting
+ older browsers. Polyfill required for fetch API to support FormData.
 
-- It does not include polyfills. Include polyfills library if you targeting
-older browsers. Polyfill required for fetch API to support FormData.
-
-@customElement
-@polymer
-@demo demo/index.html
-@memberof UiElements
-*/
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import { PolymerElement } from '../../@polymer/polymer/polymer-element.js';
-
-class BytesCounter extends PolymerElement {
+ @customElement
+ @polymer
+ @demo demo/index.html
+ @memberof LogicElements
+ */
+export class BytesCounter extends PolymerElement {
   static get is() {
     return 'bytes-counter';
   }

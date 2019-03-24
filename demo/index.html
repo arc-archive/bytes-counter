@@ -1,4 +1,7 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html>
+
+<head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
@@ -9,28 +12,20 @@
   <script type="module" src="../../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
   <script type="module" src="../../../@polymer/paper-toast/paper-toast.js"></script>
   <script type="module" src="../bytes-counter.js"></script>
-  <script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<custom-style>
+  <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
-    output {
+      output {
       display: block;
       margin-top: 20px;
       padding: 0.73em 0.54em;
       border: 1px grey solid;
     }
     </style>
-  </custom-style>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
+  </custom-style>
 </head>
-<body unresolved="">
-  <script type="module">
-const $_documentContainer = document.createElement('template');
 
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+<body unresolved="">
+  <div class="vertical-section-container centered">
     <h3>Size of string</h3>
     <demo-snippet>
       <dom-bind>
@@ -41,7 +36,6 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         </template>
       </dom-bind>
     </demo-snippet>
-
     <h3>Size of file</h3>
     <demo-snippet>
       <dom-bind id="file">
@@ -50,15 +44,16 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
           <bytes-counter bytes="{{bytes}}"></bytes-counter>
           <output>Current input has [[bytes]] bytes</output>
           <script>
-            var file = document.getElementById('file');
-            file.fileChanged = function(e) {
-              e.target.nextElementSibling.value = e.target.files[0];
-            };
-          &lt;/script>
+            {
+              const file = document.getElementById('file');
+              file.fileChanged = function(e) {
+                e.target.nextElementSibling.value = e.target.files[0];
+              };
+            }
+          </script>
         </template>
       </dom-bind>
     </demo-snippet>
-
     <h3>Size of FormData</h3>
     <demo-snippet>
       <dom-bind id="form">
@@ -72,21 +67,22 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
           <p>Note: Computed size is the size of the entire multipart message</p>
           <output>Current input has [[bytes]] bytes</output>
           <script>
-            var form = document.getElementById('form');
+          {
+            const form = document.getElementById('form');
             form.submit = function(e) {
               e.preventDefault();
               e.target.nextElementSibling.value = new FormData(e.target);
             };
             form.onError = function(e) {
-              var toast = document.body.querySelector('paper-toast');
+              const toast = document.body.querySelector('paper-toast');
               toast.text = e.detail.message;
               toast.opened = true;
             };
-          &lt;/script>
+          }
+          </script>
         </template>
       </dom-bind>
     </demo-snippet>
-
     <h3>Size of ArrayBuffer</h3>
     <demo-snippet>
       <dom-bind id="buffer">
@@ -95,52 +91,31 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
           <bytes-counter bytes="{{bytes}}"></bytes-counter>
           <output>Current input has [[bytes]] bytes</output>
           <script>
-            var buffer = document.getElementById('buffer');
+          {
+            const buffer = document.getElementById('buffer');
             buffer.onInput = function(e) {
-              var value;
+              let value;
               if ('TextEncoder' in window) {
-                var encoder = new TextEncoder();
-                var encoded = encoder.encode(e.target.value);
+                const encoder = new TextEncoder();
+                const encoded = encoder.encode(e.target.value);
                 value = encoded.buffer;
               } else {
-                var str = e.target.value;
+                const str = e.target.value;
                 value = new ArrayBuffer(str.length);
-                var _bufferView = new Uint8Array(value);
-                for (var i = 0; i < str.length; i++) {
+                const _bufferView = new Uint8Array(value);
+                for (let i = 0; i < str.length; i++) {
                   _bufferView[i] = str.charCodeAt(i);
                 }
               }
               e.target.nextElementSibling.value = value;
             };
-          &lt;/script>
+          }
+          </script>
         </template>
       </dom-bind>
     </demo-snippet>
-
     <paper-toast></paper-toast>
-  </div>`;
+  </div>
+</body>
 
-document.body.appendChild($_documentContainer.content);
-</script>encoder = new TextEncoder();
-    var encoded = encoder.encode(e.target.value);
-    value = encoded.buffer;
-  } else {
-    var str = e.target.value;
-    value = new ArrayBuffer(str.length);
-    var _bufferView = new Uint8Array(value);
-    for (var i = 0; i &lt; str.length; i++) {
-      _bufferView[i] = str.charCodeAt(i);
-    }
-  }
-  e.target.nextElementSibling.value = value;
-};
-
-        
-      
-    
-
-    <paper-toast></paper-toast>
-  
-
-
-</body></html>
+</html>
