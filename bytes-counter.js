@@ -1,4 +1,4 @@
-<!--
+/**
 @license
 Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
 Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -10,9 +10,8 @@ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
--->
-<link rel="import" href="../polymer/polymer-element.html">
-<!--
+*/
+/**
 An element that computes number of bytes in `String`, `ArrayBuffer`, `Blob`
 (and therefore `File`) and in supported browsers `FormData`.
 
@@ -41,9 +40,15 @@ older browsers. Polyfill required for fetch API to support FormData.
 @polymer
 @demo demo/index.html
 @memberof UiElements
--->
-<script>
-class BytesCounter extends Polymer.Element {
+*/
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+import { PolymerElement } from '../../@polymer/polymer/polymer-element.js';
+
+class BytesCounter extends PolymerElement {
   static get is() {
     return 'bytes-counter';
   }
@@ -202,4 +207,3 @@ class BytesCounter extends Polymer.Element {
   }
 }
 window.customElements.define(BytesCounter.is, BytesCounter);
-</script>

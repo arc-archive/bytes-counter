@@ -1,17 +1,18 @@
-<!doctype html>
-<html>
-<head>
+<!DOCTYPE html><html><head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
   <title>bytes-counter demo</title>
-  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-  <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../paper-toast/paper-toast.html">
-  <link rel="import" href="../bytes-counter.html">
-  <custom-style>
+  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script type="module" src="../../../@polymer/polymer/lib/elements/dom-bind.js"></script>
+  <script type="module" src="../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
+  <script type="module" src="../../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
+  <script type="module" src="../../../@polymer/paper-toast/paper-toast.js"></script>
+  <script type="module" src="../bytes-counter.js"></script>
+  <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
     output {
       display: block;
@@ -20,10 +21,16 @@
       border: 1px grey solid;
     }
     </style>
-  </custom-style>
+  </custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
 </head>
-<body unresolved>
-  <div class="vertical-section-container centered">
+<body unresolved="">
+  <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
     <h3>Size of string</h3>
     <demo-snippet>
       <dom-bind>
@@ -47,7 +54,7 @@
             file.fileChanged = function(e) {
               e.target.nextElementSibling.value = e.target.files[0];
             };
-          </script>
+          &lt;/script>
         </template>
       </dom-bind>
     </demo-snippet>
@@ -75,7 +82,7 @@
               toast.text = e.detail.message;
               toast.opened = true;
             };
-          </script>
+          &lt;/script>
         </template>
       </dom-bind>
     </demo-snippet>
@@ -105,12 +112,35 @@
               }
               e.target.nextElementSibling.value = value;
             };
-          </script>
+          &lt;/script>
         </template>
       </dom-bind>
     </demo-snippet>
 
     <paper-toast></paper-toast>
-  </div>
-</body>
-</html>
+  </div>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>encoder = new TextEncoder();
+    var encoded = encoder.encode(e.target.value);
+    value = encoded.buffer;
+  } else {
+    var str = e.target.value;
+    value = new ArrayBuffer(str.length);
+    var _bufferView = new Uint8Array(value);
+    for (var i = 0; i &lt; str.length; i++) {
+      _bufferView[i] = str.charCodeAt(i);
+    }
+  }
+  e.target.nextElementSibling.value = value;
+};
+
+        
+      
+    
+
+    <paper-toast></paper-toast>
+  
+
+
+</body></html>
