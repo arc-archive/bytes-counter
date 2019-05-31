@@ -3,41 +3,48 @@
   "plugins": {
     "local": {
       "disabled": true,
-      "browsers": ["chrome", "firefox"]
+      "browsers": [
+        "chrome"
+      ]
     },
     "sauce": {
       "disabled": true,
-      "browsers": [{
-        "browserName": "firefox",
-        "platform": "Windows 10",
-        "version": "latest-4"
-      }, {
-        "browserName": "firefox",
-        "platform": "Windows 10",
-        "version": "latest"
-      }, {
-        "browserName": "chrome",
-        "platform": "Windows 10",
-        "version": "latest-4"
-      }, {
-        "browserName": "chrome",
-        "platform": "Windows 10",
-        "version": "latest"
-      }, {
-        "browserName": "safari",
-        "platform": "macOS 10.12",
-        "version": "10.1"
-      }, {
-        "browserName": "safari",
-        "platform": "macOS 10.13",
-        "version": "11.1"
-      }]
+      "browsers": [
+        {
+          "browserName": "firefox",
+          "platform": "Windows 10",
+          "version": "latest-4"
+        },
+        {
+          "browserName": "firefox",
+          "platform": "Windows 10",
+          "version": "latest"
+        },
+        {
+          "browserName": "chrome",
+          "platform": "Windows 10",
+          "version": "latest-4"
+        },
+        {
+          "browserName": "chrome",
+          "platform": "Windows 10",
+          "version": "latest"
+        },
+        {
+          "browserName": "safari",
+          "platform": "macOS 10.13",
+          "version": "11.1"
+        }
+      ]
     },
-    "istanbub": {
+    "@advanced-rest-client/wct-istanbub": {
       "dir": "./coverage",
-      "reporters": ["text-summary", "lcov"],
+      "reporters": [
+        "text-summary",
+        "lcov"
+      ],
       "include": [
-        "**/*.html"
+        "**/*.js"
       ],
       "exclude": [
         "**/test/**",
@@ -47,8 +54,8 @@
       "thresholds": {
         "global": {
           "statements": 80,
-          "branches": 74,
-          "functions": 80,
+          "branches": 80,
+          "functions": 83,
           "lines": 80
         }
       }

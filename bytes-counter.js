@@ -1,4 +1,5 @@
-<!--
+import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
+/**
 @license
 Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
 Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -10,9 +11,8 @@ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
--->
-<link rel="import" href="../polymer/polymer-element.html">
-<!--
+*/
+/**
 An element that computes number of bytes in `String`, `ArrayBuffer`, `Blob`
 (and therefore `File`) and in supported browsers `FormData`.
 
@@ -40,10 +40,9 @@ older browsers. Polyfill required for fetch API to support FormData.
 @customElement
 @polymer
 @demo demo/index.html
-@memberof UiElements
--->
-<script>
-class BytesCounter extends Polymer.Element {
+@memberof LogicElements
+*/
+class BytesCounter extends PolymerElement {
   static get is() {
     return 'bytes-counter';
   }
@@ -126,6 +125,7 @@ class BytesCounter extends Polymer.Element {
    * @return {Promise} Promise resolved to number of bytes in the buffer.
    */
   _handleBuffer(buffer) {
+    console.log('_handleBuffer _handleBuffer _handleBuffer');
     if (!buffer) {
       return Promise.reject(new Error('Your browser do not support Fetch API.'));
     }
@@ -198,8 +198,11 @@ class BytesCounter extends Polymer.Element {
     if (!request.arrayBuffer) {
       return Promise.reject(new Error('Your browser do not support this method.'));
     }
-    return request.arrayBuffer();
+    return request.arrayBuffer()
+    .catch((cause) => {
+      console.warn('Request.arrayBuffer() is not supported in this browser.');
+      console.warn(cause);
+    });
   }
 }
 window.customElements.define(BytesCounter.is, BytesCounter);
-</script>
