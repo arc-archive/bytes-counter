@@ -4,9 +4,6 @@
 
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/advanced-rest-client/bytes-counter)
 
-
-[![Build Status](https://travis-ci.org/advanced-rest-client/bytes-counter.svg?branch=stage)](https://travis-ci.org/advanced-rest-client/bytes-counter)
-
 ## BytesCounter component
 
 An element that computes number of bytes in `String`, `ArrayBuffer`, `Blob`
