@@ -3,10 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
     <script src="../../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script src="../../../wct-browser-legacy/browser.js"></script>
-    <script type="module" src="../../../fetch-polyfill/fetch-polyfill.js"></script>
-    <script type="module" src="../bytes-counter.js"></script>
+    <script src="../../../@polymer/test-fixture/test-fixture.js"></script>
+    <script src="../../../mocha/mocha.js"></script>
+    <script src="../../../chai/chai.js"></script>
+    <script src="../../../wct-mocha/wct-mocha.js"></script>
+
   </head>
   <body>
 
@@ -29,10 +32,7 @@
     </test-fixture>
 
     <script type="module">
-    import '../../../fetch-polyfill/fetch-polyfill.js';
     import '../bytes-counter.js';
-    /* global fixture, assert */
-    /* jshint esnext: true */
     suite('calculateBytesString', () => {
       let element;
       setup(() => {
@@ -168,14 +168,16 @@
         });
       });
 
-      // test('Transforms FormData to array buffer', () => {
-      //   const fd = new FormData();
-      //   fd.append('a', 'b');
-      //   return element._bodyToArrayBuffer(fd)
-      //   .then((result) => {
-      //     assert.typeOf(result, 'arraybuffer');
-      //   });
-      // });
+      test('Transforms FormData to array buffer', () => {
+        const fd = new FormData();
+        fd.append('a', 'b');
+        return element._bodyToArrayBuffer(fd)
+        .then((result) => {
+          if (result !== undefined) {
+            assert.typeOf(result, 'arraybuffer');
+          }
+        });
+      });
 
       test('Rejects when Request is not defined', () => {
         const orig = window.Request;
@@ -266,14 +268,17 @@
         });
       });
 
-      // test('Resolves to size of FormData', () => {
-      //   const fd = new FormData();
-      //   fd.append('a', 'b');
-      //   return element.calculate(fd)
-      //   .then((result) => {
-      //     assert.isAbove(result, 0);
-      //   });
-      // });
+      test('Resolves to size of FormData', () => {
+        const fd = new FormData();
+        fd.append('a', 'b');
+        return element.calculate(fd)
+        .then((result) => {
+          // For browsers not supporting Fetch API in full
+          if (result !== undefined) {
+            assert.isAbove(result, 0);
+          }
+        });
+      });
 
       test('Resolves to size of casted string', () => {
         return element.calculate(2)

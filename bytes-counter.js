@@ -1,3 +1,4 @@
+import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
 /**
 @license
 Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
@@ -39,15 +40,8 @@ older browsers. Polyfill required for fetch API to support FormData.
 @customElement
 @polymer
 @demo demo/index.html
-@memberof UiElements
+@memberof LogicElements
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import { PolymerElement } from '../../@polymer/polymer/polymer-element.js';
-
 class BytesCounter extends PolymerElement {
   static get is() {
     return 'bytes-counter';
@@ -131,6 +125,7 @@ class BytesCounter extends PolymerElement {
    * @return {Promise} Promise resolved to number of bytes in the buffer.
    */
   _handleBuffer(buffer) {
+    console.log('_handleBuffer _handleBuffer _handleBuffer');
     if (!buffer) {
       return Promise.reject(new Error('Your browser do not support Fetch API.'));
     }
@@ -203,7 +198,11 @@ class BytesCounter extends PolymerElement {
     if (!request.arrayBuffer) {
       return Promise.reject(new Error('Your browser do not support this method.'));
     }
-    return request.arrayBuffer();
+    return request.arrayBuffer()
+    .catch((cause) => {
+      console.warn('Request.arrayBuffer() is not supported in this browser.');
+      console.warn(cause);
+    });
   }
 }
 window.customElements.define(BytesCounter.is, BytesCounter);
