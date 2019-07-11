@@ -6,28 +6,24 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
   <title>bytes-counter demo</title>
-  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-  <script type="module" src="../../../@polymer/polymer/lib/elements/dom-bind.js"></script>
-  <script type="module" src="../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
-  <script type="module" src="../../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
-  <script type="module" src="../../../@polymer/paper-toast/paper-toast.js"></script>
+  <script type="module" src="../node_modules/@advanced-rest-client/arc-demo-helper/arc-demo-helper.js"></script>
+  <script type="module" src="../node_modules/@polymer/paper-toast/paper-toast.js"></script>
   <script type="module" src="../bytes-counter.js"></script>
-  <custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-      output {
-      display: block;
-      margin-top: 20px;
-      padding: 0.73em 0.54em;
-      border: 1px grey solid;
-    }
-    </style>
-  </custom-style>
+
+  <style>
+  output {
+    display: block;
+    margin-top: 20px;
+    padding: 0.73em 0.54em;
+    border: 1px grey solid;
+  }
+  </style>
 </head>
 
 <body unresolved="">
   <div class="vertical-section-container centered">
     <h3>Size of string</h3>
-    <demo-snippet>
+    <arc-demo-helper>
       <dom-bind>
         <template is="dom-bind">
           <textarea value="{{value::input}}"></textarea>
@@ -35,9 +31,9 @@
           <output>Current input has [[bytes]] bytes</output>
         </template>
       </dom-bind>
-    </demo-snippet>
+    </arc-demo-helper>
     <h3>Size of file</h3>
-    <demo-snippet>
+    <arc-demo-helper>
       <dom-bind id="file">
         <template is="dom-bind">
           <input on-change="fileChanged" type="file">
@@ -51,9 +47,9 @@
           </script>
         </template>
       </dom-bind>
-    </demo-snippet>
+    </arc-demo-helper>
     <h3>Size of FormData</h3>
-    <demo-snippet>
+    <arc-demo-helper>
       <dom-bind id="form">
         <template is="dom-bind">
           <form method="post" enctype="multipart/form-data" on-submit="submit">
@@ -80,9 +76,9 @@
           </script>
         </template>
       </dom-bind>
-    </demo-snippet>
+    </arc-demo-helper>
     <h3>Size of ArrayBuffer</h3>
-    <demo-snippet>
+    <arc-demo-helper>
       <dom-bind id="buffer">
         <template is="dom-bind">
           <textarea on-input="onInput"></textarea>
@@ -101,7 +97,7 @@
           </script>
         </template>
       </dom-bind>
-    </demo-snippet>
+    </arc-demo-helper>
     <paper-toast></paper-toast>
   </div>
 </body>

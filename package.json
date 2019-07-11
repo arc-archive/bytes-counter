@@ -1,50 +1,70 @@
 {
+  "name": "@advanced-rest-client/bytes-counter",
   "description": "An element that couns number of bytes in string or object",
+  "version": "3.0.0",
+  "license": "Apache-2.0",
+  "main": "bytes-counter.js",
   "keywords": [
     "web-components",
-    "polymer",
     "bytes-counter",
     "counters"
+  ],
+  "authors": [
+    "Pawel Psztyc",
+    "The Advanced REST client authors <arc@mulesoft.com>"
+  ],
+  "contributors": [
+    "Pawel Psztyc",
+    "The Advanced REST client authors <arc@mulesoft.com>"
   ],
   "repository": {
     "type": "git",
     "url": "git://github.com/advanced-rest-client/bytes-counter.git"
   },
-  "name": "@advanced-rest-client/bytes-counter",
-  "version": "3.0.0",
-  "license": "Apache-2.0",
-  "authors": [
-    "Pawel Psztyc",
-    "The Advanced REST client authors <arc@mulesoft.com>"
-  ],
-  "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.6.1",
-    "@polymer/iron-demo-helpers": "^3.0.0",
-    "@webcomponents/webcomponentsjs": "^2.0.0",
-    "@polymer/iron-component-page": "^4.0.0",
-    "@polymer/paper-toast": "^3.0.0",
-    "@polymer/test-fixture": "^4.0.2",
-    "chai": "^4.2.0",
-    "mocha": "^5.2.0",
-    "sinon": "^7.2.3",
-    "wct-mocha": "^1.0.0"
-  },
-  "main": "bytes-counter.js",
-  "scripts": {
-    "lint": "polymer lint bytes-counter.html",
-    "test-sauce": "polymer test --plugin sauce --job-name \"bytes-counter:local-test\"",
-    "test": "polymer test --plugin local",
-    "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
-  },
   "bugs": {
     "url": "https://github.com/advanced-rest-client/bytes-counter/issues",
     "email": "arc@mulesoft.com"
   },
-  "contributors": [
-    "Pawel Psztyc",
-    "The Advanced REST client authors <arc@mulesoft.com>"
-  ],
   "dependencies": {
-    "@polymer/polymer": "^3.0.0"
+    "lit-element": "^2.0.1"
+  },
+  "devDependencies": {
+    "@advanced-rest-client/a11y-suite": "^1.0.0",
+    "@advanced-rest-client/arc-demo-helper": "^1.0.3",
+    "@advanced-rest-client/testing-karma-sl": "^1.0.2",
+    "@commitlint/cli": "^7.0.0",
+    "@commitlint/config-conventional": "^7.0.0",
+    "@open-wc/eslint-config": "^0.4.1",
+    "@open-wc/prettier-config": "^0.1.0",
+    "@open-wc/testing": "^0.11.1",
+    "@open-wc/testing-karma": "^2.0.6",
+    "@polymer/gen-typescript-declarations": "^1.6.2",
+    "@polymer/paper-toast": "^3.0.0",
+    "husky": "^1.0.0",
+    "lint-staged": "^8.0.0",
+    "owc-dev-server": "^1.0.0",
+    "sinon": "^7.3.2",
+    "webpack-merge": "^4.1.5"
+  },
+  "scripts": {
+    "test": "karma start --coverage",
+    "update-types": "gen-typescript-declarations --deleteExisting --outDir .",
+    "start": "owc-dev-server --app-index demo/index.html --open --watch",
+    "lint:eslint": "eslint --ext .js,.html .",
+    "format:eslint": "eslint --ext .js,.html . --fix",
+    "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "format:prettier": "prettier \"**/*.js\" --write",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "format": "npm run format:eslint && npm run format:prettier",
+    "test:watch": "karma start --auto-watch=true --single-run=false",
+    "test:legacy": "karma start --legacy --coverage",
+    "test:legacy:watch": "karma start --legacy --auto-watch=true --single-run=false",
+    "test:sl": "karma start karma.sl.config.js --legacy --coverage"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }

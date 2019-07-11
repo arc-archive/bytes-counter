@@ -1,4 +1,4 @@
-import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
+import { LitElement } from 'lit-element';
 /**
 @license
 Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
@@ -38,33 +38,57 @@ Note that computations are synchronous and there is a delay between setting the
 older browsers. Polyfill required for fetch API to support FormData.
 
 @customElement
-@polymer
 @demo demo/index.html
 @memberof LogicElements
 */
 class BytesCounter extends PolymerElement {
-  static get is() {
-    return 'bytes-counter';
-  }
   static get properties() {
     return {
       /**
        * A value to be evaluated.
        * It can be text, blob (and therefore File), ArrayBuffer or FormData
        */
-      value: {
-        type: String,
-        observer: 'calculate'
-      },
+      value: { type: String },
       /**
        * Calculated number of bytes from the `value`
        */
-      bytes: {
-        type: Number,
-        notify: true,
-        readOnly: true
-      }
+      bytes: { type: Number }
     };
+  }
+
+  get value() {
+    return this._value;
+  }
+
+  set value(value) {
+    const oldValue = this._value;
+    if (oldValue === value) {
+      return;
+    }
+    this._value = value;
+    this.calculate();
+  }
+
+  get bytes() {
+    return this.__bytes;
+  }
+
+  get _bytes() {
+    return this.__bytes;
+  }
+
+  set _bytes(value) {
+    const oldValue = this.__bytes;
+    if (oldValue === value) {
+      return;
+    }
+    this.__bytes = value;
+    this.dispatchEvent(new CustomEvent('bytes-changed', {
+      composed: true,
+      detail: {
+        value
+      }
+    }));
   }
 
   /**
@@ -84,7 +108,7 @@ class BytesCounter extends PolymerElement {
    */
   calculate(value) {
     if (value === undefined || value === null) {
-      this._setBytes(0);
+      this._bytes = 0;
       return Promise.resolve(0);
     }
     let size;
@@ -106,7 +130,7 @@ class BytesCounter extends PolymerElement {
     }
     return size
     .then((size) => {
-      this._setBytes(size);
+      this._bytes = size;
       return size;
     })
     .catch((cause) => {
@@ -205,4 +229,4 @@ class BytesCounter extends PolymerElement {
     });
   }
 }
-window.customElements.define(BytesCounter.is, BytesCounter);
+window.customElements.define('bytes-counter', BytesCounter);
