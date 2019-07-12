@@ -6,102 +6,113 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
   <title>bytes-counter demo</title>
-  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-  <script type="module" src="../../../@polymer/polymer/lib/elements/dom-bind.js"></script>
-  <script type="module" src="../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
-  <script type="module" src="../../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
-  <script type="module" src="../../../@polymer/paper-toast/paper-toast.js"></script>
+  <script type="module" src="../node_modules/@advanced-rest-client/arc-demo-helper/arc-demo-helper.js"></script>
+  <script type="module" src="../node_modules/@polymer/paper-toast/paper-toast.js"></script>
   <script type="module" src="../bytes-counter.js"></script>
-  <custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-      output {
-      display: block;
-      margin-top: 20px;
-      padding: 0.73em 0.54em;
-      border: 1px grey solid;
-    }
-    </style>
-  </custom-style>
+
+  <style>
+  output {
+    display: block;
+    margin-top: 20px;
+    padding: 0.73em 0.54em;
+    border: 1px grey solid;
+  }
+  </style>
 </head>
 
 <body unresolved="">
   <div class="vertical-section-container centered">
     <h3>Size of string</h3>
-    <demo-snippet>
-      <dom-bind>
-        <template is="dom-bind">
-          <textarea value="{{value::input}}"></textarea>
-          <bytes-counter value="[[value]]" bytes="{{bytes}}"></bytes-counter>
-          <output>Current input has [[bytes]] bytes</output>
-        </template>
-      </dom-bind>
-    </demo-snippet>
+    <arc-demo-helper>
+      <template>
+        <textarea id="i1"></textarea>
+        <bytes-counter id="b1"></bytes-counter>
+        <output id="o1"></output>
+        <script>
+        {
+          document.getElementById('i1').addEventListener('input', (e) => {
+            const { value } = e.target;
+            document.getElementById('b1').value = value;
+          });
+          document.getElementById('b1').addEventListener('change', (e) => {
+            const { value } = e.detail;
+            document.getElementById('o1').value = `Current input has ${value} bytes`;
+          });
+        }
+        </script>
+      </template>
+    </arc-demo-helper>
     <h3>Size of file</h3>
-    <demo-snippet>
-      <dom-bind id="file">
-        <template is="dom-bind">
-          <input on-change="fileChanged" type="file">
-          <bytes-counter bytes="{{bytes}}"></bytes-counter>
-          <output>Current input has [[bytes]] bytes</output>
-          <script>
-            document.getElementById('file')
-            .fileChanged = function(e) {
-              e.target.nextElementSibling.value = e.target.files[0];
-            };
-          </script>
-        </template>
-      </dom-bind>
-    </demo-snippet>
-    <h3>Size of FormData</h3>
-    <demo-snippet>
-      <dom-bind id="form">
-        <template is="dom-bind">
-          <form method="post" enctype="multipart/form-data" on-submit="submit">
-            <input type="file" name="file">
-            <input name="text">
-            <input type="submit" value="Submit">
-          </form>
-          <bytes-counter bytes="{{bytes}}" on-error="onError"></bytes-counter>
-          <p>Note: Computed size is the size of the entire multipart message</p>
-          <output>Current input has [[bytes]] bytes</output>
-          <script>
-            {
-              const form = document.getElementById('form');
-              form.submit = function(e) {
-                e.preventDefault();
-                e.target.nextElementSibling.value = new FormData(e.target);
-              };
-              form.onError = function(e) {
-                const toast = document.body.querySelector('paper-toast');
-                toast.text = e.detail.message;
-                toast.opened = true;
-              };
-            }
-          </script>
-        </template>
-      </dom-bind>
-    </demo-snippet>
-    <h3>Size of ArrayBuffer</h3>
-    <demo-snippet>
-      <dom-bind id="buffer">
-        <template is="dom-bind">
-          <textarea on-input="onInput"></textarea>
-          <bytes-counter bytes="{{bytes}}"></bytes-counter>
-          <output>Current input has [[bytes]] bytes</output>
-          <script>
+    <arc-demo-helper>
+      <template>
+        <input id="i2" type="file">
+        <bytes-counter id="b2"></bytes-counter>
+        <output id="o2"></output>
+        <script>
           {
-            const buffer = document.getElementById('buffer');
-            buffer.onInput = function(e) {
-              const encoder = new TextEncoder();
-              const encoded = encoder.encode(e.target.value);
-              const value = encoded.buffer;
-              e.target.nextElementSibling.value = value;
-            };
+            document.getElementById('i2').addEventListener('change', (e) => {
+              e.target.nextElementSibling.value = e.target.files[0];
+            });
+            document.getElementById('b2').addEventListener('change', (e) => {
+              const { value } = e.detail;
+              document.getElementById('o2').value = `Current input has ${value} bytes`;
+            });
           }
-          </script>
-        </template>
-      </dom-bind>
-    </demo-snippet>
+        </script>
+      </template>
+    </arc-demo-helper>
+    <h3>Size of FormData</h3>
+    <arc-demo-helper>
+      <template>
+        <form id="i3" method="post" enctype="multipart/form-data">
+          <input type="file" name="file">
+          <input name="text">
+          <input type="submit" value="Submit">
+        </form>
+        <bytes-counter id="b3"></bytes-counter>
+        <p>Note: Computed size is the size of the entire multipart message</p>
+        <output id="o3"></output>
+        <script>
+          {
+            document.getElementById('i3').addEventListener('submit', (e) => {
+              e.preventDefault();
+              e.target.nextElementSibling.value = new FormData(e.target);
+            });
+            document.getElementById('b3').addEventListener('change', (e) => {
+              const { value } = e.detail;
+              document.getElementById('o3').value = `Current input has ${value} bytes`;
+            });
+            document.getElementById('b3').addEventListener('error', (e) => {
+              const toast = document.body.querySelector('paper-toast');
+              toast.text = e.detail.message;
+              toast.opened = true;
+            });
+          }
+        </script>
+      </template>
+    </arc-demo-helper>
+    <h3>Size of ArrayBuffer</h3>
+    <arc-demo-helper>
+      <template>
+        <textarea id="i4" on-input="onInput"></textarea>
+        <bytes-counter id="b4" bytes="{{bytes}}"></bytes-counter>
+        <output id="o4"></output>
+        <script>
+        {
+          document.getElementById('i4').addEventListener('input', (e) => {
+            const { value } = e.target;
+            const encoder = new TextEncoder();
+            const encoded = encoder.encode(value);
+            e.target.nextElementSibling.value = encoded.buffer;
+          });
+          document.getElementById('b4').addEventListener('change', (e) => {
+            const { value } = e.detail;
+            document.getElementById('o4').value = `Current input has ${value} bytes`;
+          });
+        }
+        </script>
+      </template>
+    </arc-demo-helper>
     <paper-toast></paper-toast>
   </div>
 </body>
