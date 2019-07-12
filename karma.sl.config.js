@@ -5,7 +5,7 @@ const createBaseConfig = require('./karma.conf.js');
 
 module.exports = (config) => {
   const cnf = slSettings();
-  cnf.sauceLabs.testName = 'byhtes-counter';
+  cnf.sauceLabs.testName = 'bytes-counter';
   cnf.browsers = [
     'SL_Chrome',
     'SL_Chrome-1',
@@ -13,7 +13,6 @@ module.exports = (config) => {
     'SL_Firefox-1',
     'SL_Safari',
     'SL_Safari-1',
-    'SL_IE_11',
     'SL_EDGE',
   ];
   if (process.env.TRAVIS) {
