@@ -1,9 +1,7 @@
 import { fixture, assert, aTimeout } from '@open-wc/testing';
-import sinon from 'sinon/pkg/sinon-esm.js';
-import { a11ySuite } from '@advanced-rest-client/a11y-suite/index.js';
+import * as sinon from 'sinon/pkg/sinon-esm.js';
 import '../bytes-counter.js';
 
-/* global URLSearchParams */
 const hasSearchParams = typeof URLSearchParams === 'function';
 
 describe('<bytes-counter>', function() {
@@ -58,7 +56,8 @@ describe('<bytes-counter>', function() {
 
   function performMapit(element, map, fnCall) {
     const iterator = map.entries();
-    while (true) {
+    const state = true;
+    while (state) {
       const entry = iterator.next();
       if (entry.done) {
         break;
@@ -357,6 +356,9 @@ describe('<bytes-counter>', function() {
       assert.equal(element.getAttribute('aria-hidden'), 'false');
     });
 
-    a11ySuite('Normal state', '<bytes-counter></bytes-counter>');
+    it('Sets aria-hidden attribute', async () => {
+      const element = await basicFixture();
+      await assert.isAccessible(element);
+    });
   });
 });

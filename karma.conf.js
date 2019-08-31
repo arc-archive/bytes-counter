@@ -1,22 +1,51 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const createDefaultConfig = require('@advanced-rest-client/a11y-suite/default-config.js');
-const merge = require('webpack-merge');
+const { createDefaultConfig } = require('@open-wc/testing-karma');
+const merge = require('deepmerge');
 
 module.exports = (config) => {
   config.set(
-      merge(createDefaultConfig(config), {
-        files: [
+    merge(createDefaultConfig(config), {
+      files: [
         // runs all files ending with .test in the test folder,
         // can be overwritten by passing a --grep flag. examples:
         //
         // npm run test -- --grep test/foo/bar.test.js
         // npm run test -- --grep test/bar/*
-          { pattern: config.grep ? config.grep : 'test/**/*.test.js', type: 'module' },
-          'node_modules/accessibility-developer-tools/dist/js/axs_testing.js'
-        ],
+        {
+          pattern: config.grep ? config.grep : 'test/**/*.test.js',
+          type: 'module'
+        },
+        {
+          pattern: require.resolve('chai/chai.js')
+        },
+        {
+          pattern: require.resolve('axe-core/axe.min.js')
+        }
+      ],
 
-      // you can overwrite/extend the config further
-      }),
+      // see the karma-esm docs for all options
+      esm: {
+        // if you are using 'bare module imports' you will need this option
+        nodeResolve: true
+      },
+
+      client: {
+        mocha: {
+          timeout: 2000
+        }
+      },
+
+      coverageIstanbulReporter: {
+        thresholds: {
+          global: {
+            statements: 80,
+            branches: 80,
+            functions: 90,
+            lines: 80
+          }
+        }
+      },
+    })
   );
   return config;
 };

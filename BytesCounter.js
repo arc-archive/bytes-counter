@@ -182,38 +182,34 @@ export class BytesCounter extends HTMLElement {
    * the `value` is not one of the supported types then the promise will
    * resolve to `undefined`;
    */
-  calculate(value) {
+  async calculate(value) {
     if (value === undefined || value === null) {
       this._bytes = 0;
       return Promise.resolve(0);
     }
-    let size;
-    if (typeof value === 'string') {
-      size = this.stringBytes(value);
-    } else if (value instanceof Blob) {
-      size = this.blobBytes(value);
-    } else if (value instanceof ArrayBuffer) {
-      size = this.bufferBytes(value);
-    } else if (value instanceof FormData ||
-      (typeof URLSearchParams === 'function' && (value instanceof URLSearchParams))) {
-      /* global URLSearchParams */
-      size = this._bodyToArrayBuffer(value)
-      .then((buffer) => this._handleBuffer(buffer));
-    } else {
-      size = this.stringBytes(String(value));
-    }
-    if (!(size instanceof Promise)) {
-      size = Promise.resolve(size);
-    }
-    return size
-    .catch((cause) => {
-      console.warn(cause);
+    try {
+      let size;
+      if (typeof value === 'string') {
+        size = this.stringBytes(value);
+      } else if (value instanceof Blob) {
+        size = this.blobBytes(value);
+      } else if (value instanceof ArrayBuffer) {
+        size = this.bufferBytes(value);
+      } else if (value instanceof FormData ||
+        (typeof URLSearchParams === 'function' && (value instanceof URLSearchParams))) {
+        const buffer = await this._bodyToArrayBuffer(value);
+        size = await this._handleBuffer(buffer);
+      } else {
+        size = this.stringBytes(String(value));
+      }
+      return size;
+    } catch (cause) {
       this.dispatchEvent(new CustomEvent('error', {
         detail: {
           message: cause && cause.message ? cause.message : 'Your browser do not support this API.'
         }
       }));
-    });
+    }
   }
   /**
    * Handles buffer size calculation.
@@ -221,11 +217,11 @@ export class BytesCounter extends HTMLElement {
    * @param {ArrayBuffer} buffer Buffer created from the body.
    * @return {Promise} Promise resolved to number of bytes in the buffer.
    */
-  _handleBuffer(buffer) {
+  async _handleBuffer(buffer) {
     if (!buffer) {
-      return Promise.reject(new Error('Your browser do not support Fetch API.'));
+      throw new Error('Your browser do not support Fetch API.');
     }
-    return Promise.resolve(this.bufferBytes(buffer));
+    return this.bufferBytes(buffer);
   }
   /**
    * Calculates number of bytes in string.
@@ -281,7 +277,7 @@ export class BytesCounter extends HTMLElement {
    * @return {Promise} Resolved promise with the ArrayBuffer. It will reject
    * if the browser doesn't support this method.
    */
-  _bodyToArrayBuffer(body) {
+  async _bodyToArrayBuffer(body) {
     let request;
     try {
       request = new Request('/', {
@@ -289,15 +285,20 @@ export class BytesCounter extends HTMLElement {
         body: body
       });
     } catch (e) {
-      return Promise.reject(new Error('Your browser do not support Fetch API.'));
+      throw new Error('Your browser do not support Fetch API.');
     }
     if (!request.arrayBuffer) {
-      return Promise.reject(new Error('Your browser do not support this method.'));
+      throw new Error('Your browser do not support this method.');
     }
-    return request.arrayBuffer()
-    .catch((cause) => {
-      console.warn('Request.arrayBuffer() is not supported in this browser.');
-      console.warn(cause);
-    });
+    try {
+      return await request.arrayBuffer();
+    } catch (_) {
+      const message = 'Request.arrayBuffer() is not supported in this browser.';
+      this.dispatchEvent(new CustomEvent('error', {
+        detail: {
+          message
+        }
+      }));
+    }
   }
 }

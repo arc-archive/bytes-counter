@@ -9,3 +9,6 @@ polymer.json
 karma.*
 husky.*
 commitlint.*
+.*
+*.config.*
+prettier.config.js
